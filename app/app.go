@@ -29,18 +29,22 @@ func NewApp(hasher Hasher, provider Provider, logger log.Logger) *App {
 	}
 }
 
+func (this *App) fetch(url string) {
+	response, err := this.provider.Get(url)
+	if err != nil {
+		this.logger.Println(err)
+		return
+	}
+	bodyBytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		this.logger.Println(err)
+		return
+	}
+	fmt.Println(url, this.hasher.Hash(bodyBytes))
+}
+
 func (this *App) Fetch(urls []string) {
 	for _, url := range urls {
-		response, err := this.provider.Get(url)
-		if err != nil {
-			this.logger.Println(err)
-			continue
-		}
-		bodyBytes, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			this.logger.Println(err)
-			continue
-		}
-		fmt.Println(url, this.hasher.Hash(bodyBytes))
+		this.fetch(url)
 	}
 }
