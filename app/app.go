@@ -1,7 +1,10 @@
 package app
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -29,7 +32,18 @@ func (this *App) Fetch(urls []string) {
 			this.logger.Println(err)
 			continue
 		}
-		fmt.Println(response)
+		bodyBytes, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			this.logger.Println(err)
+			continue
+		}
+		fmt.Println(url, getHash(bodyBytes))
 	}
+}
+
+func getHash(response []byte) string {
+	hasher := md5.New()
+	hasher.Write(response)
+	return hex.EncodeToString(hasher.Sum(nil))
 }
 
