@@ -2,6 +2,7 @@ package main
 
 import (
 	. "adjust/app"
+	. "adjust/hasher"
 	. "adjust/provider"
 	"log"
 	"os"
@@ -9,8 +10,9 @@ import (
 
 func main() {
 
+	hasher := NewHash()
 	provider := NewHttpProvider()
-	app := NewApp(provider, log.Logger{})
+	app := NewApp(hasher, provider, log.Logger{})
 	commandLineArgs := os.Args
 
 	app.Fetch(commandLineArgs[1:])

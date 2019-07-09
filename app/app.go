@@ -1,8 +1,6 @@
 package app
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -13,13 +11,19 @@ type Provider interface {
 	Get(url string) (*http.Response, error)
 }
 
-type App struct {
-	provider Provider
-	logger log.Logger
+type Hasher interface {
+	Hash(response []byte) string
 }
 
-func NewApp(provider Provider, logger log.Logger) *App{
+type App struct {
+	hasher   Hasher
+	provider Provider
+	logger   log.Logger
+}
+
+func NewApp(hasher Hasher, provider Provider, logger log.Logger) *App {
 	return &App{
+		hasher:   hasher,
 		provider: provider,
 		logger:   logger,
 	}
@@ -37,13 +41,6 @@ func (this *App) Fetch(urls []string) {
 			this.logger.Println(err)
 			continue
 		}
-		fmt.Println(url, getHash(bodyBytes))
+		fmt.Println(url, this.hasher.Hash(bodyBytes))
 	}
 }
-
-func getHash(response []byte) string {
-	hasher := md5.New()
-	hasher.Write(response)
-	return hex.EncodeToString(hasher.Sum(nil))
-}
-
