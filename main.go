@@ -1,30 +1,17 @@
 package main
 
 import (
-	"fmt"
+	. "adjust/app"
+	. "adjust/provider"
 	"log"
-	"net/http"
 	"os"
 )
 
 func main() {
+
+	provider := NewHttpProvider()
+	app := NewApp(provider, log.Logger{})
 	commandLineArgs := os.Args
 
-	for _, commandLineArg := range commandLineArgs[1:] {
-		resp, err := Get(commandLineArg)
-		if err != nil {
-			log.Println(err)
-			continue
-		}
-		fmt.Println(resp)
-		resp.Body.Close()
-	}
-}
-
-func Get(url string) (*http.Response, error) {
-	response, err := http.Get(url)
-	if err != nil {
-		return nil, err
-	}
-	return response, nil
+	app.Fetch(commandLineArgs[1:])
 }
