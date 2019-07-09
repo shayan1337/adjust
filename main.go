@@ -12,7 +12,9 @@ func main() {
 
 	hasher := NewHash()
 	provider := NewHttpProvider()
-	app := NewApp(hasher, provider, log.Logger{})
+	logger := log.Logger{}
+	logger.SetOutput(os.Stdout)
+	app := NewApp(hasher, provider, logger)
 	commandLineArgs := os.Args
 
 	app.Fetch(commandLineArgs[1:])
