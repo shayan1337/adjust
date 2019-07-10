@@ -4,7 +4,6 @@ import (
 	. "adjust/app"
 	"adjust/resolver"
 	"flag"
-	"os"
 	"runtime"
 )
 
@@ -23,5 +22,5 @@ func throttleRequest() {
 }
 
 func getCommandLineArgs() []string{
-	return os.Args[1:]
+	return flag.Args()
 }
