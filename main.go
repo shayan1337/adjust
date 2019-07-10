@@ -11,11 +11,21 @@ import (
 func main() {
 
 	hasher := NewHash()
+	logger := getLogger()
 	provider := NewHttpProvider()
-	logger := log.Logger{}
-	logger.SetOutput(os.Stdout)
+	commandLineArgs := getCommandLineArgs()
+
 	app := NewApp(hasher, provider, logger)
-	commandLineArgs := os.Args
 
 	app.Fetch(commandLineArgs[1:])
+}
+
+func getCommandLineArgs() []string{
+	return os.Args[1:]
+}
+
+func getLogger() log.Logger {
+	logger := log.Logger{}
+	logger.SetOutput(os.Stdout)
+	return logger
 }
