@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"sync"
 )
 
@@ -51,9 +52,23 @@ func (this *App) fetch(url string, wg *sync.WaitGroup) {
 
 func (this *App) Fetch(urls []string) {
 	var wg sync.WaitGroup
-	for _, url := range urls {
+	for _, rawUrl := range urls {
+		parsedUrl, err := parseUrl(rawUrl)
+		if err != nil{
+			this.logger.Error(err)
+			continue
+		}
 		wg.Add(1)
-		go this.fetch(url, &wg)
+		go this.fetch(parsedUrl, &wg)
 	}
 	wg.Wait()
+}
+
+func parseUrl(rawUrl string) (string, error) {
+	u, err := url.Parse(rawUrl)
+	if err != nil {
+		return rawUrl, err
+	}
+	u.Scheme = "http"
+	return u.String(), nil
 }
