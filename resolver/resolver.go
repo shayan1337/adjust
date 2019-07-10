@@ -5,13 +5,12 @@ import (
 	. "adjust/hasher"
 	. "adjust/logger"
 	. "adjust/provider"
-	"log"
 )
 
-func ResolveAppDependency() (app.Hasher, *HttpProvider, log.Logger){
+func ResolveAppDependency() (app.Hasher, *HttpProvider, *Logger){
 	hasher := NewHash()
 	provider := NewHttpProvider()
-	logger := GetLogger()
+	logger := NewLogger()
 
 	return hasher, provider, logger
 }

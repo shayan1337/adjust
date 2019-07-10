@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"sync"
 )
@@ -16,13 +15,17 @@ type Hasher interface {
 	Hash(response []byte) string
 }
 
+type Logger interface {
+	Error(err error)
+}
+
 type App struct {
 	hasher   Hasher
 	provider Provider
-	logger   log.Logger
+	logger   Logger
 }
 
-func NewApp(hasher Hasher, provider Provider, logger log.Logger) *App {
+func NewApp(hasher Hasher, provider Provider, logger Logger) *App {
 	return &App{
 		hasher:   hasher,
 		provider: provider,
@@ -34,13 +37,13 @@ func (this *App) fetch(url string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	response, err := this.provider.Get(url)
 	if err != nil {
-		this.logger.Println(err)
+		this.logger.Error(err)
 		return
 	}
-	defer response.Body.Close()
 	bodyBytes, err := ioutil.ReadAll(response.Body)
+	response.Body.Close()
 	if err != nil {
-		this.logger.Println(err)
+		this.logger.Error(err)
 		return
 	}
 	fmt.Println(url, this.hasher.Hash(bodyBytes))

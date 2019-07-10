@@ -2,11 +2,15 @@ package logger
 
 import (
 	"log"
-	"os"
 )
 
-func GetLogger() log.Logger {
-	logger := log.Logger{}
-	logger.SetOutput(os.Stdout)
-	return logger
+type Logger struct {
+}
+
+func NewLogger() *Logger {
+	return &Logger{}
+}
+
+func (this *Logger) Error(err error) {
+	log.Println(err)
 }
