@@ -2,10 +2,8 @@ package main
 
 import (
 	. "adjust/app"
-	. "adjust/hasher"
-	. "adjust/provider"
+	"adjust/resolver"
 	"flag"
-	"log"
 	"os"
 	"runtime"
 )
@@ -15,11 +13,7 @@ func main() {
 	throttleRequest()
 	commandLineArgs := getCommandLineArgs()
 
-	hasher := NewHash()
-	logger := getLogger()
-	provider := NewHttpProvider()
-
-	NewApp(hasher, provider, logger).Fetch(commandLineArgs)
+	NewApp(resolver.ResolveAppDependency()).Fetch(commandLineArgs)
 }
 
 func throttleRequest() {
@@ -30,10 +24,4 @@ func throttleRequest() {
 
 func getCommandLineArgs() []string{
 	return os.Args[1:]
-}
-
-func getLogger() log.Logger {
-	logger := log.Logger{}
-	logger.SetOutput(os.Stdout)
-	return logger
 }

@@ -5,15 +5,15 @@ import (
 	"net/http"
 )
 
-type httpProvider struct {
+type HttpProvider struct {
 	logger log.Logger
 }
 
-func NewHttpProvider() *httpProvider {
-	return &httpProvider{}
+func NewHttpProvider() *HttpProvider {
+	return &HttpProvider{}
 }
 
-func (this *httpProvider) Get(url string) (*http.Response, error) {
+func (this *HttpProvider) Get(url string) (*http.Response, error) {
 	response, err := http.Get(url)
 	if err != nil {
 		return nil, err
