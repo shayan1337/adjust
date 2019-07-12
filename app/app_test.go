@@ -21,6 +21,7 @@ func Test_ShouldAppendProtocolToUrlIfNotPresent(t *testing.T) {
 }
 
 func Test_ShouldFetchUrlResponseAndPrintResponseHashToTheStandardOutput(t *testing.T) {
+	variable = 0
 	url := "http://adjust.com"
 	writer := TestStdWriter{}
 	wg := sync.WaitGroup{}
@@ -30,6 +31,19 @@ func Test_ShouldFetchUrlResponseAndPrintResponseHashToTheStandardOutput(t *testi
 	app.fetch(url, &wg)
 
 	if variable != 1 {
+		t.Fail()
+	}
+}
+
+func Test_ShouldFetchUrlResponseAndPrintResponseHashToTheStandardOutputForAllURLs(t *testing.T) {
+	variable = 0
+	urls := []string{ "http://adjust.com", "facebook.com", "http://instagram.com"}
+	writer := TestStdWriter{}
+	app := NewApp(hasher.NewHash(), provider.NewHttpProvider(), logger.NewLogger(), writer)
+
+	app.Fetch(urls)
+
+	if variable != len(urls) {
 		t.Fail()
 	}
 }
