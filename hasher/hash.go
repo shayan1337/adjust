@@ -1,14 +1,13 @@
 package hasher
 
 import (
-	"adjust/app"
 	"crypto/md5"
 	"encoding/hex"
 )
 
 type Hash struct {}
 
-func NewHash() app.Hasher {
+func NewHash() Hash{
 	return Hash{}
 }
 
