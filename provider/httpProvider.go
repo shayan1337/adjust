@@ -1,12 +1,10 @@
 package provider
 
 import (
-	"log"
 	"net/http"
 )
 
 type HttpProvider struct {
-	logger log.Logger
 }
 
 func NewHttpProvider() *HttpProvider {
