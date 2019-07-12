@@ -10,7 +10,7 @@ func Test_ShouldReturnResponseForAValidUrl(t *testing.T) {
 	response, err := httpProvider.Get(url)
 
 	if err != nil {
-		t.Fail()
+		t.FailNow()
 	}
 
 	if response.StatusCode != 200 {
