@@ -4,7 +4,6 @@ import (
 	"adjust/hasher"
 	"adjust/logger"
 	"adjust/provider"
-	"github.com/stretchr/testify/assert"
 	"sync"
 	"testing"
 )
@@ -16,8 +15,13 @@ func Test_ShouldAppendProtocolToUrlIfNotPresent(t *testing.T) {
 	expected := "http://adjust.com"
 	result, err := parseUrl(url)
 
-	assert.Equal(t, expected, result)
-	assert.Nil(t, err)
+	if result != expected {
+		t.Fail()
+	}
+
+	if err != nil {
+		t.Fail()
+	}
 }
 
 func Test_ShouldFetchUrlResponseAndPrintResponseHashToTheStandardOutput(t *testing.T) {

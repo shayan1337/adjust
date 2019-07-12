@@ -1,7 +1,6 @@
 package provider
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -10,8 +9,13 @@ func Test_ShouldReturnResponseForAValidUrl(t *testing.T) {
 	httpProvider := NewHttpProvider()
 	response, err := httpProvider.Get(url)
 
-	assert.Nil(t, err)
-	assert.Equal(t, 200, response.StatusCode)
+	if err != nil {
+		t.Fail()
+	}
+
+	if response.StatusCode != 200 {
+		t.Fail()
+	}
 }
 
 func Test_ShouldReturnErrForAnInValidUrl(t *testing.T) {
@@ -19,5 +23,7 @@ func Test_ShouldReturnErrForAnInValidUrl(t *testing.T) {
 	httpProvider := NewHttpProvider()
 	_, err := httpProvider.Get(url)
 
-	assert.NotNil(t, err)
+	if err == nil {
+		t.Fail()
+	}
 }
