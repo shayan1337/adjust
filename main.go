@@ -2,6 +2,7 @@ package main
 
 import (
 	. "adjust/app"
+	"adjust/constants"
 	"adjust/resolver"
 	"flag"
 	"runtime"
@@ -16,7 +17,7 @@ func main() {
 }
 
 func throttleRequest() {
-	maxParallelRequests := flag.Int("parallel", 10, "a flag to limit number of parallel requests")
+	maxParallelRequests := flag.Int("parallel", constants.DEFAULT_GOMAXPROCS, "a flag to limit number of parallel requests")
 	flag.Parse()
 	runtime.GOMAXPROCS(*maxParallelRequests)
 }
