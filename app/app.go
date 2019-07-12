@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -20,17 +19,23 @@ type Logger interface {
 	Error(err error)
 }
 
+type Writer interface {
+	Write(url string, value string)
+}
+
 type App struct {
 	hasher   Hasher
 	provider Provider
 	logger   Logger
+	writer   Writer
 }
 
-func NewApp(hasher Hasher, provider Provider, logger Logger) *App {
+func NewApp(hasher Hasher, provider Provider, logger Logger, writer Writer) *App {
 	return &App{
 		hasher:   hasher,
 		provider: provider,
 		logger:   logger,
+		writer:   writer,
 	}
 }
 
@@ -47,14 +52,14 @@ func (this *App) fetch(url string, wg *sync.WaitGroup) {
 		this.logger.Error(err)
 		return
 	}
-	fmt.Println(url, this.hasher.Hash(bodyBytes))
+	this.writer.Write(url, this.hasher.Hash(bodyBytes))
 }
 
 func (this *App) Fetch(urls []string) {
 	var wg sync.WaitGroup
 	for _, rawUrl := range urls {
 		parsedUrl, err := parseUrl(rawUrl)
-		if err != nil{
+		if err != nil {
 			this.logger.Error(err)
 			continue
 		}
